@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import { Clock } from './components/Clock/Clock';
+import { Clock } from './components/Clock';
 
 function getRandomName(): string {
   const value = Date.now().toString().slice(-4);
@@ -19,22 +19,31 @@ export class App extends React.Component {
     clockName: 'Clock-0',
   };
 
-  nameTimerId = window.setInterval(() => {
-    this.setState({ clockName: getRandomName() });
-  }, 3300);
+  nameTimerId: number | undefined = undefined;
 
-  handlerContextMenu = document.addEventListener(
-    'contextmenu',
-    (event: MouseEvent) => {
-      event.preventDefault();
+  handlerContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
 
-      this.setState({ hasClock: false });
-    },
-  );
+    this.setState({ hasClock: false });
+  };
 
-  handlerClick = document.addEventListener('click', () => {
+  handlerClick = () => {
     this.setState({ hasClock: true });
-  });
+  };
+
+  componentDidMount(): void {
+    document.addEventListener('click', this.handlerClick);
+    document.addEventListener('contextmenu', this.handlerContextMenu);
+    this.nameTimerId = window.setInterval(() => {
+      this.setState({ clockName: getRandomName() });
+    }, 3300);
+  }
+
+  componentWillUnmount(): void {
+    document.removeEventListener('click', this.handlerClick);
+    document.removeEventListener('contextmenu', this.handlerContextMenu);
+    window.clearInterval(this.nameTimerId);
+  }
 
   render() {
     return (
