@@ -16,7 +16,6 @@ export class Clock extends React.Component<Props> {
   timerId: number | undefined = undefined;
 
   componentDidMount(): void {
-    // This code starts a timer
     this.timerId = window.setInterval(() => {
       const now = new Date();
 
@@ -35,7 +34,6 @@ export class Clock extends React.Component<Props> {
   }
 
   componentWillUnmount(): void {
-    // this code stops the timer
     window.clearInterval(this.timerId);
   }
 
